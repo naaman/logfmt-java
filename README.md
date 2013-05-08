@@ -4,9 +4,9 @@ a Heroku logging format.
 
 ## Usage
 ```java
-import com.heroku.logfmt.*;
+import com.heroku.logfmt.Logfmt;
 ...
-Map<String, Object> parsed = new Logfmt().parse("a=b thing=\"quoted thing\" justhename".getBytes())
+Map<String, Object> parsed = Logfmt.parse("a=b thing=\"quoted thing\" justhename".getBytes())
 System.out.println(parsed.get("a"));
 ```
 
