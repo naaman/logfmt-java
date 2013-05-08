@@ -46,7 +46,7 @@ public class Logfmt implements LogFormat {
                     break;
                 case VAL:
                     if (b == '\\' && i < (line.length - 1) && line[i + 1] == '"') {
-                        value = appendbyte(line[i++], value);
+                        value = appendbyte(line[++i], value);
                     } else if (isChar(b, quoted)) {
                         value = appendbyte(b, value);
                     } else {
