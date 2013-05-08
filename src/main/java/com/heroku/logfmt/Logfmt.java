@@ -3,14 +3,13 @@ package com.heroku.logfmt;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Logfmt implements LogFormat {
+public class Logfmt {
 
     private static char SEPARATOR = ' ';
 
     private enum ScanState { NEXT, KEY, VAL }
 
-    @Override
-    public Map<String, Object> parse(byte[] line) {
+    public static Map<String, Object> parse(byte[] line) {
         ScanState state = ScanState.NEXT;
 
         Map<String, Object> parsed = new HashMap<String, Object>();
@@ -62,14 +61,14 @@ public class Logfmt implements LogFormat {
         return parsed;
     }
 
-    private boolean isChar(byte b) { return isChar(b, false); }
+    private static boolean isChar(byte b) { return isChar(b, false); }
 
-    private boolean isChar(byte b, boolean quoted) {
+    private static boolean isChar(byte b, boolean quoted) {
         if (!quoted) return b > SEPARATOR && b != '=' && b != '"';
         else return b >= SEPARATOR && b != '=' && b != '"';
     }
 
-    private byte[] appendbyte(byte b, byte[] a) {
+    private static byte[] appendbyte(byte b, byte[] a) {
         byte[] n = new byte[a.length + 1];
         if (n.length > 1) System.arraycopy(a, 0, n, 0, n.length - 1);
         n[n.length - 1] = b;

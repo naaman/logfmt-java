@@ -34,13 +34,17 @@ public class LogfmtTest {
                     put("%^asdf",     "".getBytes());
                 }}
             },
-            { "   \"   =  ", new HashMap<String, Object>()}
+            { "   \"   =  ", new HashMap<String, Object>()},
+            {
+                "measure.thing.p99=2ms",
+                new HashMap<String, Object>(){{put("measure.thing.p99", "2ms".getBytes());}}
+            }
         };
     }
 
     @Test(dataProvider = "linesAsMap")
     public void nameValuePairsShouldParseAsAMap(String line, Map<String, Object> expected) {
-        Map<String, Object> parsed = new Logfmt().parse(line.getBytes());
+        Map<String, Object> parsed = Logfmt.parse(line.getBytes());
         assertEquals(parsed, expected);
     }
 
