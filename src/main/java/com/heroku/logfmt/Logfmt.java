@@ -1,7 +1,6 @@
 package com.heroku.logfmt;
 
 import java.util.HashMap;
-
 import java.util.Map;
 
 public class Logfmt implements LogFormat {
@@ -46,7 +45,9 @@ public class Logfmt implements LogFormat {
                     }
                     break;
                 case VAL:
-                    if (isChar(b, quoted)) {
+                    if (b == '\\' && i < (line.length - 1) && line[i + 1] == '"') {
+                        value = appendbyte(line[i++], value);
+                    } else if (isChar(b, quoted)) {
                         value = appendbyte(b, value);
                     } else {
                         parsed.put(new String(key), value);

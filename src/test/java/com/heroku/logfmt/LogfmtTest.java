@@ -14,11 +14,11 @@ public class LogfmtTest {
     public Object[][] linesAsMap() {
         return new Object[][]{
             {
-                "   a=foo bar=10ms E=\"123\" d foo=",
+                "   a=foo bar=10ms E=\"12\\\"3\" d foo=",
                 new HashMap<String, Object>(){{
                     put("a",   "foo".getBytes());
                     put("bar", "10ms".getBytes());
-                    put("E",   "123".getBytes());
+                    put("E",   "12\"3".getBytes());
                     put("d",   "".getBytes());
                     put("foo", "".getBytes());
                 }}
@@ -34,7 +34,7 @@ public class LogfmtTest {
                     put("%^asdf",     "".getBytes());
                 }}
             },
-            { "    \"    =  ", new HashMap<String, Object>()}
+            { "   \"   =  ", new HashMap<String, Object>()}
         };
     }
 
