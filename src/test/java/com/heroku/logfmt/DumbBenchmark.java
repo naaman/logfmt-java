@@ -16,13 +16,18 @@ public class DumbBenchmark {
 
         printlnf("Parsing '%s' (%dbytes) %d times.", new String(data), data.length, count);
 
-        long start = System.currentTimeMillis();
-
-        for (BigInteger i = BigInteger.ZERO; i.compareTo(count) == -1; i = i.add(BigInteger.ONE)) {
+        // warmup
+        for (BigInteger i = BigInteger.ZERO; i.compareTo(BigInteger.valueOf(2).pow(30)) == -1; i = i.add(BigInteger.ONE)) {
             Logfmt.parse(data);
         }
 
-        long time = System.currentTimeMillis() - start;
+        long time = 0;
+
+        for (BigInteger i = BigInteger.ZERO; i.compareTo(count) == -1; i = i.add(BigInteger.ONE)) {
+            long start = System.currentTimeMillis();
+            Logfmt.parse(data);
+            time += System.currentTimeMillis() - start;
+        }
 
         printlnf("Completed %dGB of data in %sms (≈ %dMB/sec)",
                  multiplier, time, gb.divide(BigInteger.valueOf(time))
