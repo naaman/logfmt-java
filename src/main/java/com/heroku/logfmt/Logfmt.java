@@ -5,7 +5,11 @@ import java.util.Map;
 
 public class Logfmt {
 
-    private static char SEPARATOR = ' ';
+    private static final char SEPARATOR = ' ';
+
+    private static final int KEY_START  = 0;
+    private static final int KEY_LEN    = 1;
+    private static final int VAL_START  = 2;
 
     private enum ScanState { NEXT, KEY, VAL }
 
@@ -14,13 +18,10 @@ public class Logfmt {
 
         Map<String, byte[]> parsed = new HashMap<String, byte[]>();
 
-        boolean quoted  = false;
+        boolean quoted = false;
         boolean escaped;
 
-        int[] pos      = new int[3];
-        int KEY_START  = 0;
-        int KEY_LEN    = 1;
-        int VAL_START  = 2;
+        int[] pos = new int[3];
 
         for (int i = 0; i < line.length; i++) {
             byte b = line[i];

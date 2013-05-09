@@ -14,12 +14,7 @@ public class DumbBenchmark {
         BigInteger gb = BigInteger.valueOf(2).pow(30).multiply(BigInteger.valueOf(multiplier));
         BigInteger count = gb.divide(BigInteger.valueOf(data.length));
 
-        printlnf("Parsing '%s' (%dbytes) %d times.", new String(data), data.length, count);
-
-        // warmup
-        for (BigInteger i = BigInteger.ZERO; i.compareTo(BigInteger.valueOf(2).pow(30)) == -1; i = i.add(BigInteger.ONE)) {
-            Logfmt.parse(data);
-        }
+        printlnf("Timing parsing '%s' (%dbytes) %d times.", new String(data), data.length, count);
 
         long time = 0;
 
