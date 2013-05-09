@@ -13,6 +13,11 @@ System.out.println(parsed.get("a"));
 ## Building
 `mvn clean install`
 
+## Benchmark
+There's a crappy benchmark that can be run after building:
+
+`java -cp target/logfmt-0.1-SNAPSHOT.jar:target/test-classes/ com.heroku.logfmt.DumbBenchmark 1 "a=foo b=10ms c=cat E=\"123\" d foo= emp="`
+
 ## TODO
 * Reflection-based mapping
 * Maven Central deployment
