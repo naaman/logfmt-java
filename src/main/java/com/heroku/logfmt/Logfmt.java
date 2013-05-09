@@ -9,69 +9,91 @@ public class Logfmt {
 
     private enum ScanState { NEXT, KEY, VAL }
 
-    public static Map<String, Object> parse(byte[] line) {
+    public static Map<String, byte[]> parse(byte[] line) {
         ScanState state = ScanState.NEXT;
 
-        Map<String, Object> parsed = new HashMap<String, Object>();
+        Map<String, byte[]> parsed = new HashMap<String, byte[]>();
 
-        boolean quoted = false;
+        boolean quoted  = false;
+        boolean escaped;
 
-        byte[] key   = new byte[0];
-        byte[] value = new byte[0];
+        int[] pos      = new int[3];
+        int KEY_START  = 0;
+        int KEY_LEN    = 1;
+        int VAL_START  = 2;
 
         for (int i = 0; i < line.length; i++) {
             byte b = line[i];
 
             switch (state) {
                 case NEXT:
-                    if (isChar(b)) state = ScanState.KEY;
-                    else break;
+                    if (isChar(b)) {
+                        state = ScanState.KEY;
+                        pos[KEY_START] = i;
+                    } else break;
                 case KEY:
                     if (b == '=') {
                         quoted = false;
+                        pos[KEY_LEN] = i - pos[KEY_START];
                         state = ScanState.VAL;
-                        if (i < (line.length - 1) && line[i + 1] == '"') {
-                            quoted = true;
-                            i++;
+                        i++;
+
+                        if (i < line.length) {
+                            if (line[i] == '"') {
+                                quoted = true;
+                                i++;
+                            }
+                            pos[VAL_START] = i;
+                            b = line[i];
+                        } else {
+                            break;
                         }
+
+                    } else if (!isChar(b)) {
+                        byte[] key = slice(pos[KEY_START], (i - pos[KEY_START]), line);
+                        parsed.put(new String(key), new byte[0]);
+                        pos = new int[3];
+                        state = ScanState.NEXT;
                         break;
-                    } else if (isChar(b)) {
-                        key = appendbyte(b, key);
-                    } else {
-                        parsed.put(new String(key), value);
-                        state = ScanState.NEXT;
-                        key = value = new byte[0];
                     }
-                    break;
                 case VAL:
-                    if (b == '\\' && i < (line.length - 1) && line[i + 1] == '"') {
-                        value = appendbyte(line[++i], value);
-                    } else if (isChar(b, quoted)) {
-                        value = appendbyte(b, value);
-                    } else {
+                    escaped = false;
+                    if (b == '\\' && i < (line.length - 1)) {
+                        escaped = true;
+                        i++;
+                        b = line[i];
+                    }
+                    if (!isChar(b, quoted, escaped)) {
+                        byte[] key = slice(pos[KEY_START], pos[KEY_LEN], line);
+                        byte[] value = slice(pos[VAL_START], (i - pos[VAL_START]), line);
                         parsed.put(new String(key), value);
                         state = ScanState.NEXT;
-                        key = value = new byte[0];
+                        pos = new int[3];
                     }
                     break;
             }
         }
-        if (key.length > 0) parsed.put(new String(key), value);
+        if (pos[KEY_START] + pos[KEY_LEN] > 0) {
+            byte[] key = slice(pos[KEY_START], pos[KEY_LEN], line);
+            byte[] value = (pos[VAL_START] > 0) ? slice(pos[VAL_START], line.length - pos[VAL_START], line)
+                                                : new byte[0];
+            parsed.put(new String(key), value);
+        }
 
         return parsed;
     }
 
-    private static boolean isChar(byte b) { return isChar(b, false); }
+    private static boolean isChar(byte b) { return isChar(b, false, false); }
 
-    private static boolean isChar(byte b, boolean quoted) {
+    private static boolean isChar(byte b, boolean quoted, boolean escaped) {
         if (!quoted) return b > SEPARATOR && b != '=' && b != '"';
-        else return b >= SEPARATOR && b != '=' && b != '"';
+        else return b >= SEPARATOR && b != '=' && (b != '"' || escaped);
     }
 
-    private static byte[] appendbyte(byte b, byte[] a) {
-        byte[] n = new byte[a.length + 1];
-        if (n.length > 1) System.arraycopy(a, 0, n, 0, n.length - 1);
-        n[n.length - 1] = b;
+    private static byte[] slice(int start, int len, byte[] a) {
+        byte[] n = new byte[len];
+        System.arraycopy(a, start, n, 0, len);
         return n;
     }
+
 }

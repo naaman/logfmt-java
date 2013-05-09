@@ -1,12 +1,12 @@
 package com.heroku.logfmt;
 
-import static org.testng.Assert.*;
-
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.testng.Assert.assertEquals;
 
 public class LogfmtTest {
 
@@ -18,7 +18,7 @@ public class LogfmtTest {
                 new HashMap<String, Object>(){{
                     put("a",   "foo".getBytes());
                     put("bar", "10ms".getBytes());
-                    put("E",   "12\"3".getBytes());
+                    put("E",   "12\\\"3".getBytes());
                     put("d",   "".getBytes());
                     put("foo", "".getBytes());
                 }}
@@ -44,7 +44,7 @@ public class LogfmtTest {
 
     @Test(dataProvider = "linesAsMap")
     public void nameValuePairsShouldParseAsAMap(String line, Map<String, Object> expected) {
-        Map<String, Object> parsed = Logfmt.parse(line.getBytes());
+        Map<String, byte[]> parsed = Logfmt.parse(line.getBytes());
         assertEquals(parsed, expected);
     }
 
