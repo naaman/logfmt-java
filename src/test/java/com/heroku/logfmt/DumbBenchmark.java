@@ -6,13 +6,19 @@ public class DumbBenchmark {
     public static void main(String... args) {
         int multiplier = 1;
 
-        byte[] data = "foo=bar a=1\\4 baz=\"hello kitty\" cool%story=bro f %^asdf  ".getBytes();
+        char[] data = "foo=bar a=1\\4 baz=\"hello kitty\" cool%story=bro f %^asdf  ".toCharArray();
 
         if (args.length > 0) multiplier = Integer.valueOf(args[0]);
-        if (args.length > 1) data = args[1].getBytes();
+        if (args.length > 1) data = args[1].toCharArray();
 
         BigInteger gb = BigInteger.valueOf(2).pow(30).multiply(BigInteger.valueOf(multiplier));
         BigInteger count = gb.divide(BigInteger.valueOf(data.length));
+
+        System.out.print("Warming up...");
+        for (int i = 0; i < 100000; i++) {
+            Logfmt.parse(data);
+        }
+        System.out.println("done.");
 
         printlnf("Timing parsing '%s' (%dbytes) %d times.", new String(data), data.length, count);
 

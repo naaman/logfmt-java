@@ -13,10 +13,10 @@ public class Logfmt {
 
     private enum ScanState { NEXT, KEY, VAL }
 
-    public static Map<String, byte[]> parse(byte[] line) {
+    public static Map<String, char[]> parse(char[] line) {
         ScanState state = ScanState.NEXT;
 
-        Map<String, byte[]> parsed = new HashMap<String, byte[]>();
+        Map<String, char[]> parsed = new HashMap<String, char[]>();
 
         boolean quoted = false;
         boolean escaped;
@@ -24,7 +24,7 @@ public class Logfmt {
         int[] pos = new int[3];
 
         for (int i = 0; i < line.length; i++) {
-            byte b = line[i];
+            char b = line[i];
 
             switch (state) {
                 case NEXT:
@@ -51,8 +51,8 @@ public class Logfmt {
                         }
 
                     } else if (!isChar(b)) {
-                        byte[] key = slice(pos[KEY_START], (i - pos[KEY_START]), line);
-                        parsed.put(new String(key), new byte[0]);
+                        char[] key = slice(pos[KEY_START], (i - pos[KEY_START]), line);
+                        parsed.put(new String(key), new char[0]);
                         pos = new int[3];
                         state = ScanState.NEXT;
                         break;
@@ -65,8 +65,8 @@ public class Logfmt {
                         b = line[i];
                     }
                     if (!isChar(b, quoted, escaped)) {
-                        byte[] key = slice(pos[KEY_START], pos[KEY_LEN], line);
-                        byte[] value = slice(pos[VAL_START], (i - pos[VAL_START]), line);
+                        char[] key = slice(pos[KEY_START], pos[KEY_LEN], line);
+                        char[] value = slice(pos[VAL_START], (i - pos[VAL_START]), line);
                         parsed.put(new String(key), value);
                         state = ScanState.NEXT;
                         pos = new int[3];
@@ -75,24 +75,24 @@ public class Logfmt {
             }
         }
         if (pos[KEY_START] + pos[KEY_LEN] > 0) {
-            byte[] key = slice(pos[KEY_START], pos[KEY_LEN], line);
-            byte[] value = (pos[VAL_START] > 0) ? slice(pos[VAL_START], line.length - pos[VAL_START], line)
-                                                : new byte[0];
+            char[] key = slice(pos[KEY_START], pos[KEY_LEN], line);
+            char[] value = (pos[VAL_START] > 0) ? slice(pos[VAL_START], line.length - pos[VAL_START], line)
+                                                : new char[0];
             parsed.put(new String(key), value);
         }
 
         return parsed;
     }
 
-    private static boolean isChar(byte b) { return isChar(b, false, false); }
+    private static boolean isChar(char b) { return isChar(b, false, false); }
 
-    private static boolean isChar(byte b, boolean quoted, boolean escaped) {
+    private static boolean isChar(char b, boolean quoted, boolean escaped) {
         if (!quoted) return b > SEPARATOR && b != '=' && b != '"';
         else return b >= SEPARATOR && b != '=' && (b != '"' || escaped);
     }
 
-    private static byte[] slice(int start, int len, byte[] a) {
-        byte[] n = new byte[len];
+    private static char[] slice(int start, int len, char[] a) {
+        char[] n = new char[len];
         System.arraycopy(a, start, n, 0, len);
         return n;
     }
