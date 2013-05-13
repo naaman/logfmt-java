@@ -1,5 +1,6 @@
 package com.heroku.logfmt;
 
+import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
 
 public class DumbBenchmark {
@@ -22,17 +23,19 @@ public class DumbBenchmark {
 
         printlnf("Timing parsing '%s' (%dbytes) %d times.", new String(data), data.length, count);
 
-        long time = 0;
+        BigInteger time = BigInteger.ZERO;
 
         for (BigInteger i = BigInteger.ZERO; i.compareTo(count) == -1; i = i.add(BigInteger.ONE)) {
-            long start = System.currentTimeMillis();
+            long start = ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
             Logfmt.parse(data);
-            time += System.currentTimeMillis() - start;
+            time = time.add(BigInteger.valueOf(
+                       ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime() - start
+                   ));
         }
 
         printlnf("Completed %dGB of data in %sms (≈ %dMB/sec)",
-                 multiplier, time, gb.divide(BigInteger.valueOf(time))
-                                     .divide(BigInteger.valueOf(2).pow(10)));
+                multiplier, time, gb.divide(time.divide(BigInteger.TEN.pow(7)))
+                                    .divide(BigInteger.valueOf(2).pow(10)));
     }
 
     private static void printlnf(String s, Object... args) {
