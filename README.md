@@ -6,7 +6,7 @@ a Heroku logging format.
 ```java
 import com.heroku.logfmt.Logfmt;
 ...
-Map<String, Object> parsed = Logfmt.parse("a=b thing=\"quoted thing\" justhename".getBytes())
+Map<String, Object> parsed = Logfmt.parse("a=b thing=\"quoted thing\" justhename".toCharArray())
 System.out.println(parsed.get("a"));
 ```
 
