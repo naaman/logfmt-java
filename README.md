@@ -3,6 +3,15 @@ A Java implementation of [logfmt](http://godoc.org/github.com/kr/logfmt),
 a Heroku logging format.
 
 ## Usage
+
+```xml
+<dependency>
+     <groupId>com.heroku</groupId>
+     <artifactId>logfmt</artifactId>
+     <version>0.1</version>
+ </dependency>
+```
+
 ```java
 import com.heroku.logfmt.Logfmt;
 ...
@@ -20,12 +29,11 @@ mvn clean install
 There's a crappy benchmark that can be run after building:
 
 ```sh
-java -cp target/logfmt-0.1-SNAPSHOT.jar:target/test-classes/ com.heroku.logfmt.DumbBenchmark 1 "a=foo b=10ms c=cat E=\"123\" d foo= emp="
+java -cp target/logfmt-0.2-SNAPSHOT.jar:target/test-classes/ com.heroku.logfmt.DumbBenchmark 1 "a=foo b=10ms c=cat E=\"123\" d foo= emp="
 ```
 
 ## TODO
 * Reflection-based mapping
-* Maven Central deployment
 
 ## LICENSE
 The MIT License (MIT)
