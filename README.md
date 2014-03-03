@@ -6,17 +6,22 @@ a Heroku logging format.
 ```java
 import com.heroku.logfmt.Logfmt;
 ...
-Map<String, Object> parsed = Logfmt.parse("a=b thing=\"quoted thing\" justhename".getBytes())
+Map<String, Object> parsed = Logfmt.parse("a=b thing=\"quoted thing\" justhename".toCharArray())
 System.out.println(parsed.get("a"));
 ```
 
-## Building
-`mvn clean install`
+## Build
+
+```sh
+mvn clean install
+```
 
 ## Benchmark
 There's a crappy benchmark that can be run after building:
 
-`java -cp target/logfmt-0.1-SNAPSHOT.jar:target/test-classes/ com.heroku.logfmt.DumbBenchmark 1 "a=foo b=10ms c=cat E=\"123\" d foo= emp="`
+```sh
+java -cp target/logfmt-0.1-SNAPSHOT.jar:target/test-classes/ com.heroku.logfmt.DumbBenchmark 1 "a=foo b=10ms c=cat E=\"123\" d foo= emp="
+```
 
 ## TODO
 * Reflection-based mapping
