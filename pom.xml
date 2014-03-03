@@ -7,6 +7,26 @@
     <groupId>com.heroku</groupId>
     <artifactId>logfmt</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>logfmt</name>
+    <description>Java implementation of logfmt (http://godoc.org/github.com/kr/logfmt)</description>
+    <url>https://github.com/naaman/logfmt-java</url>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/naaman/logfmt-java/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/naaman/logfmt-java</url>
+        <connection>https://github.com/naaman/logfmt-java.git</connection>
+    </scm>
+    <developers>
+        <developer>
+            <name>Naaman Newbold</name>
+            <email>naaman@heroku.com</email>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
@@ -21,7 +41,6 @@
             <version>0.5-rc1</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     
 </project>
