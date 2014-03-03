@@ -12,7 +12,7 @@
 
     <groupId>com.heroku</groupId>
     <artifactId>logfmt</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
     <name>logfmt</name>
     <description>Java implementation of logfmt (http://godoc.org/github.com/kr/logfmt)</description>
