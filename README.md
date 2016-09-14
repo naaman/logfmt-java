@@ -6,10 +6,10 @@ a Heroku logging format.
 
 ```xml
 <dependency>
-     <groupId>com.heroku</groupId>
-     <artifactId>logfmt</artifactId>
-     <version>0.1</version>
- </dependency>
+  <groupId>com.heroku</groupId>
+  <artifactId>logfmt</artifactId>
+  <version>0.1</version>
+</dependency>
 ```
 
 ```java
